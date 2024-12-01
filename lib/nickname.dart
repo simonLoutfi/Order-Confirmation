@@ -8,7 +8,7 @@ class Nickname extends StatefulWidget {
     final List<CameraDescription> camera;
 
 
-    Nickname({required this.camera});
+    const Nickname({super.key, required this.camera});
 
   @override
   State<Nickname> createState() => _NicknameState();
@@ -56,7 +56,7 @@ class _NicknameState extends State<Nickname> {
         child: 
            Stack(children: <Widget>[
             Container(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 image: DecorationImage(
                   fit: BoxFit.fill,
                   image: AssetImage(
@@ -68,7 +68,7 @@ class _NicknameState extends State<Nickname> {
             ),
             Container(
               height: height,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 gradient: LinearGradient(
                   begin: FractionalOffset.topCenter,
                   end: FractionalOffset.bottomCenter,
@@ -99,7 +99,7 @@ class _NicknameState extends State<Nickname> {
                           ),
                           child: IconButton(
                             
-                            icon: Icon(Icons.arrow_back_ios_new_rounded, color: const Color.fromARGB(255, 123, 123, 123)),
+                            icon:const Icon(Icons.arrow_back_ios_new_rounded, color: Color.fromARGB(255, 123, 123, 123)),
                             onPressed: () {
                               Navigator.push(
                                 context,
@@ -125,7 +125,7 @@ class _NicknameState extends State<Nickname> {
                                       color: Colors.transparent,
                                       shape: BoxShape.circle,
                                     ),
-                                    child: Center(
+                                    child: const Center(
                                       child: Text(
                                         "50%",
                                         style: TextStyle(
@@ -136,7 +136,7 @@ class _NicknameState extends State<Nickname> {
                                       ),
                                     ),
                                   ),
-                                  Positioned.fill(
+                                  const Positioned.fill(
                                     child: CircularProgressIndicator(
                                       value: 0.5,
                                       color: Colors.white,
@@ -155,9 +155,9 @@ class _NicknameState extends State<Nickname> {
               child:  
               SizedBox(
                 width: width*0.5,
-                child: Text(
+                child: const Text(
                   "Enter your name",
-                  style: const TextStyle(
+                  style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
                   fontSize: 30
@@ -194,33 +194,24 @@ class _NicknameState extends State<Nickname> {
 
       ),
       floatingActionButton: Container(
-        decoration: BoxDecoration(
+        decoration:const BoxDecoration(
           shape: BoxShape.circle, 
           color: Colors.white,    
         ),
         child: FloatingActionButton(
           onPressed: () async {
             if(nameController.text.isEmpty){
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: Text("Input Error"),
-                    content: Text("Enter your name!"),
-                    actions: <Widget>[
-                      TextButton(
-                        child: Text("OK"),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                    ],
+              ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text("Enter you name!"),
+                    ),
                   );
-                },
-              );
 
             }else{
               await _saveValues();
+              if (!mounted) return; 
+                
+              if (context.mounted) {
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -229,13 +220,13 @@ class _NicknameState extends State<Nickname> {
                   ),
                 ),
               );
-              
+              }
             }
 
           },
           elevation: 0,           
           backgroundColor: Colors.transparent, 
-          child: Icon(
+          child:const Icon(
             Icons.arrow_forward,
             size: 40,            
             color: Colors.black,  

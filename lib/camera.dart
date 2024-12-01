@@ -1,7 +1,8 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:proto/addPhoto.dart';
+import 'package:proto/add_photo.dart';
 import 'package:proto/camera2.dart';
+import 'dart:developer' as developer;
 
 
 class Camera extends StatefulWidget {
@@ -9,8 +10,8 @@ class Camera extends StatefulWidget {
 
   const Camera({
     required this.camera,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   State<Camera> createState() => _CameraState();
@@ -44,7 +45,7 @@ class _CameraState extends State<Camera> {
       setState((){}); 
     }
     catch(e){
-      print(e);
+      developer.log(e.toString());
     }  
   }
 
@@ -58,12 +59,8 @@ class _CameraState extends State<Camera> {
         newDescription = widget.camera.firstWhere((description) => description.lensDirection == CameraLensDirection.front);
     }
 
-      if(newDescription != null){
-        _initCamera(newDescription);
-      }
-      else{
-        print('Asked camera not available');
-      }
+    _initCamera(newDescription);
+      
   }
   @override
   Widget build(BuildContext context) {
@@ -103,7 +100,7 @@ class _CameraState extends State<Camera> {
                           ),
                           child: IconButton(
                             
-                            icon: Icon(Icons.arrow_back_ios_new_rounded, color: const Color(0xFFCCCCCC)),
+                            icon: const Icon(Icons.arrow_back_ios_new_rounded, color:Color(0xFFCCCCCC)),
                             onPressed: () {
                               Navigator.push(
                                 context,
@@ -122,13 +119,13 @@ class _CameraState extends State<Camera> {
                             color: Colors.transparent,
                             shape: BoxShape.circle,
                           ),
-                          child: IconButton(onPressed: _toggleCameraLens, icon: Icon(Icons.swap_horiz_rounded),color: Color(0xFFCCCCCC), iconSize: 25,),
+                          child: IconButton(onPressed: _toggleCameraLens, icon: const Icon(Icons.swap_horiz_rounded),color: const Color(0xFFCCCCCC), iconSize: 25,),
                         ),
                       ),
                     ],
                   ),
                   Padding(
-                      padding: EdgeInsets.only(bottom: 35),
+                      padding:const EdgeInsets.only(bottom: 35),
                       child: SizedBox(
                         height: 84, 
                         width: 84,  
@@ -139,18 +136,21 @@ class _CameraState extends State<Camera> {
                             try {
                               await _initializeControllerFuture;
                               final image = await _controller.takePicture();
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>  
-                                  Camera2(
-                                    camera: widget.camera,
-                                    image: image,
+                              if (!mounted) return; 
+                              if (context.mounted) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>  
+                                    Camera2(
+                                      camera: widget.camera,
+                                      image: image,
+                                    ),
                                   ),
-                                ),
-                              );
+                                );
+                              }
                             } catch (e) {
-                              print(e);
+                              developer.log(e.toString());
                             }
                           },
                           child: Container(

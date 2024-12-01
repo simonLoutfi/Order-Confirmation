@@ -1,6 +1,6 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:proto/addPhoto.dart';
+import 'package:proto/add_photo.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'nickname.dart';
 
@@ -8,7 +8,7 @@ class Gender extends StatefulWidget {
     final List<CameraDescription> camera;
 
 
-    Gender({required this.camera});
+    const Gender({super.key, required this.camera});
 
   @override
   State<Gender> createState() => _GenderState();
@@ -34,7 +34,7 @@ class _GenderState extends State<Gender> {
         child: 
            Stack(children: <Widget>[
             Container(
-              decoration: BoxDecoration(
+              decoration:const BoxDecoration(
                 image: DecorationImage(
                   fit: BoxFit.fill,
                   image: AssetImage(
@@ -46,7 +46,7 @@ class _GenderState extends State<Gender> {
             ),
             Container(
               height: height,
-              decoration: BoxDecoration(
+              decoration:const BoxDecoration(
                 gradient: LinearGradient(
                   begin: FractionalOffset.topCenter,
                   end: FractionalOffset.bottomCenter,
@@ -77,7 +77,7 @@ class _GenderState extends State<Gender> {
                           ),
                           child: IconButton(
                             
-                            icon: Icon(Icons.arrow_back_ios_new_rounded, color: const Color.fromARGB(255, 123, 123, 123)),
+                            icon:const Icon(Icons.arrow_back_ios_new_rounded, color:Color.fromARGB(255, 123, 123, 123)),
                             onPressed: () {
                               Navigator.push(
                                 context,
@@ -103,7 +103,7 @@ class _GenderState extends State<Gender> {
                                       color: Colors.transparent,
                                       shape: BoxShape.circle,
                                     ),
-                                    child: Center(
+                                    child:const Center(
                                       child: Text(
                                         "75%",
                                         style: TextStyle(
@@ -114,7 +114,7 @@ class _GenderState extends State<Gender> {
                                       ),
                                     ),
                                   ),
-                                  Positioned.fill(
+                                  const Positioned.fill(
                                     child: CircularProgressIndicator(
                                       value: 0.75,
                                       color: Colors.white,
@@ -133,10 +133,10 @@ class _GenderState extends State<Gender> {
               child:   
                 SizedBox(
                   width: width*0.7,
-                  child:Column(children: [
+                  child:const Column(children: [
                     Text(
                       "Which gender do you identify as?",
-                      style: const TextStyle(
+                      style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
                       fontSize: 30
@@ -145,7 +145,7 @@ class _GenderState extends State<Gender> {
                       SizedBox(height: 15,),
                       Text(
                         "Your gender helps us fix the issue in a more optimized way",
-                        style: const TextStyle(
+                        style: TextStyle(
                         color: Colors.grey,
                         fontSize: 15
                         ),
@@ -154,7 +154,7 @@ class _GenderState extends State<Gender> {
                 )           
 
             ),
-            SizedBox(height: 50,),
+            const SizedBox(height: 50,),
             Center(
                   child: 
                     InkWell(
@@ -175,12 +175,12 @@ class _GenderState extends State<Gender> {
                       decoration: BoxDecoration(
                             border: Border.all(color: Colors.grey, width: 1),
                             color: const Color.fromARGB(120, 0, 0, 0),
-                            borderRadius: BorderRadius.all(Radius.circular(15))
+                            borderRadius:const BorderRadius.all(Radius.circular(15))
                           ),
-                      child: Center(
+                      child:const Center(
                         child: Text(
                         "Male",
-                        style:const TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 23),
+                        style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 23),
                         ),
                       ),
                       
@@ -188,7 +188,7 @@ class _GenderState extends State<Gender> {
                   )
                   
                 ),
-            SizedBox(height: 25,),
+            const SizedBox(height: 25,),
                 Center(
                   child: InkWell(
                     onTap: () {
@@ -208,12 +208,12 @@ class _GenderState extends State<Gender> {
                     decoration: BoxDecoration(
                           border: Border.all(color: Colors.grey, width: 1),
                           color: const Color.fromARGB(120, 0, 0, 0),
-                          borderRadius: BorderRadius.all(Radius.circular(15))
+                          borderRadius:const BorderRadius.all(Radius.circular(15))
                         ),
-                    child: Center(
+                    child: const Center(
                       child: Text(
                       "Female",
-                      style:const TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 23),
+                      style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 23),
                       ),
                     ),
                   ),
@@ -221,7 +221,7 @@ class _GenderState extends State<Gender> {
                   
                 ),
 
-            SizedBox(height: 25,),
+            const SizedBox(height: 25,),
             Center(
                   child: InkWell(
                     onTap: () {
@@ -241,12 +241,12 @@ class _GenderState extends State<Gender> {
                     decoration: BoxDecoration(
                           border: Border.all(color: Colors.grey, width: 1),
                           color: const Color.fromARGB(120, 0, 0, 0),
-                          borderRadius: BorderRadius.all(Radius.circular(15))
+                          borderRadius:const BorderRadius.all(Radius.circular(15))
                         ),
-                    child: Center(
+                    child: const Center(
                       child: Text(
                       "Other",
-                      style:const TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 23),
+                      style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 23),
                       ),
                     ),
                   ),

@@ -7,13 +7,13 @@ import 'nickname.dart';
 class Birthday extends StatefulWidget {
 
     final List<CameraDescription> camera;
-    Birthday({required this.camera});
+    const Birthday({super.key, required this.camera});
 
   @override
-  _BirthdayState createState() => _BirthdayState();
+  BirthdayState createState() => BirthdayState();
 }
 
-class _BirthdayState extends State<Birthday> {
+class BirthdayState extends State<Birthday> {
   final TextEditingController dayController = TextEditingController();
   final TextEditingController monthController = TextEditingController();
   final TextEditingController yearController = TextEditingController();
@@ -65,13 +65,27 @@ class _BirthdayState extends State<Birthday> {
     }
 
     int currentYear = DateTime.now().year;
+    int currentMonth = DateTime.now().month;
+    int currentDay = DateTime.now().day;
 
     if (year == null || year > currentYear) {
       return "Year cannot be greater than the current year.";
     }
 
-    if (month == 2 && day > 29){
+    if (month == 2 && day > 29) {
       return "February has max 29 days";
+    }
+
+    if (month == 2 && day > 28 && !(year % 4 == 0 && (year % 100 != 0 || year % 400 == 0))) {
+      return "February has max 28 days in the given year.";
+    }
+
+    if (year == currentYear) {
+      if (month > currentMonth) {
+        return "Month cannot be greater than the current month.";
+      } else if (month == currentMonth && day > currentDay) {
+        return "Day cannot be greater than today's date.";
+      }
     }
 
     return null;
@@ -88,7 +102,7 @@ class _BirthdayState extends State<Birthday> {
         child: Stack(
           children: <Widget>[
             Container(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 image: DecorationImage(
                   fit: BoxFit.fill,
                   image: AssetImage('assets/images/stock.png'),
@@ -98,7 +112,7 @@ class _BirthdayState extends State<Birthday> {
             ),
             Container(
               height: height,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 gradient: LinearGradient(
                   begin: FractionalOffset.topCenter,
                   end: FractionalOffset.bottomCenter,
@@ -127,7 +141,7 @@ class _BirthdayState extends State<Birthday> {
                         ),
                         child: IconButton(
                           
-                          icon: Icon(Icons.close, color: const Color.fromARGB(255, 123, 123, 123)),
+                          icon: const Icon(Icons.close, color: Color.fromARGB(255, 123, 123, 123)),
                           onPressed: () {
                             Navigator.push(
                               context,
@@ -153,7 +167,7 @@ class _BirthdayState extends State<Birthday> {
                                     color: Colors.transparent,
                                     shape: BoxShape.circle,
                                   ),
-                                  child: Center(
+                                  child: const Center(
                                     child: Text(
                                       "25%",
                                       style: TextStyle(
@@ -164,12 +178,12 @@ class _BirthdayState extends State<Birthday> {
                                     ),
                                   ),
                                 ),
-                                Positioned.fill(
+                                const Positioned.fill(
                                   child: CircularProgressIndicator(
                                     value: 0.25,
                                     color: Colors.white,
                                     strokeWidth: 2,
-                                    backgroundColor: Colors.transparent, // Ensure transparency behind progress
+                                    backgroundColor: Colors.transparent, 
                                   ),
                                 ),
                               ],
@@ -182,11 +196,11 @@ class _BirthdayState extends State<Birthday> {
                 ),
               SizedBox(
                 width: width*(2/3),
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 20, top: 70),
+                child: const Padding(
+                  padding: EdgeInsets.only(left: 20, top: 70),
                   child: Text(
                     "When's your birthday?",
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
                       fontSize: 30,
@@ -221,7 +235,7 @@ class _BirthdayState extends State<Birthday> {
                             ),
                           ),
                           const SizedBox(height: 15),
-                          Text("Day", style: TextStyle(fontSize: 16, color: Colors.grey)),
+                          const Text("Day", style: TextStyle(fontSize: 16, color: Colors.grey)),
                         ],
                       ),
                       
@@ -246,7 +260,7 @@ class _BirthdayState extends State<Birthday> {
                             ),
                           ),
                           const SizedBox(height: 15),
-                          Text("Month", style: TextStyle(fontSize: 16, color: Colors.grey)),
+                          const Text("Month", style: TextStyle(fontSize: 16, color: Colors.grey)),
                         ],
                       ),
                       const SizedBox(width: 20),
@@ -270,7 +284,7 @@ class _BirthdayState extends State<Birthday> {
                             ),
                           ),
                           const SizedBox(height: 15),
-                          Text("Year", style: TextStyle(fontSize: 16, color: Colors.grey))
+                          const Text("Year", style: TextStyle(fontSize: 16, color: Colors.grey))
                         ],
                       ),
                       
@@ -286,7 +300,7 @@ class _BirthdayState extends State<Birthday> {
         ),
       ),
       floatingActionButton: Container(
-        decoration: BoxDecoration(
+        decoration:const BoxDecoration(
           shape: BoxShape.circle,
           color: Colors.white,
         ),
@@ -295,38 +309,31 @@ class _BirthdayState extends State<Birthday> {
             String? validationMessage = validateInputs();
 
             if (validationMessage != null) {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: Text("Input Error"),
-                    content: Text(validationMessage),
-                    actions: <Widget>[
-                      TextButton(
-                        child: Text("OK"),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                    ],
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(validationMessage),
+                    ),
                   );
-                },
-              );
             } else {
-              await _saveValues();
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => Nickname(
-                    camera: widget.camera,
-                  ),
-                ),
-              );
-            }
+                await _saveValues();
+
+                if (!mounted) return; 
+                
+                if (context.mounted) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => Nickname(
+                        camera: widget.camera,
+                      ),
+                    ),
+                  );
+                }
+              }
           },
           elevation: 0,
           backgroundColor: Colors.transparent,
-          child: Icon(
+          child:const Icon(
             Icons.arrow_forward,
             size: 40,
             color: Colors.black,

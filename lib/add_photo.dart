@@ -9,7 +9,7 @@ class Addphoto extends StatelessWidget {
     final List<CameraDescription> camera;
 
 
-    Addphoto({required this.camera});
+    Addphoto({super.key, required this.camera});
 
   final TextEditingController nameController = TextEditingController();
 
@@ -24,7 +24,7 @@ class Addphoto extends StatelessWidget {
         child: 
            Stack(children: <Widget>[
             Container(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 image: DecorationImage(
                   fit: BoxFit.fill,
                   image: AssetImage(
@@ -36,7 +36,7 @@ class Addphoto extends StatelessWidget {
             ),
             Container(
               height: height,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 gradient: LinearGradient(
                   begin: FractionalOffset.topCenter,
                   end: FractionalOffset.bottomCenter,
@@ -67,7 +67,7 @@ class Addphoto extends StatelessWidget {
                           ),
                           child: IconButton(
                             
-                            icon: Icon(Icons.arrow_back_ios_new_rounded, color: const Color.fromARGB(255, 123, 123, 123)),
+                            icon: const Icon(Icons.arrow_back_ios_new_rounded, color:  Color.fromARGB(255, 123, 123, 123)),
                             onPressed: () {
                               Navigator.push(
                                 context,
@@ -93,7 +93,7 @@ class Addphoto extends StatelessWidget {
                                       color: Colors.transparent,
                                       shape: BoxShape.circle,
                                     ),
-                                    child: Center(
+                                    child: const Center(
                                       child: Text(
                                         "100%",
                                         style: TextStyle(
@@ -104,7 +104,7 @@ class Addphoto extends StatelessWidget {
                                       ),
                                     ),
                                   ),
-                                  Positioned.fill(
+                                  const Positioned.fill(
                                     child: CircularProgressIndicator(
                                       value: 1,
                                       color: Colors.white,
@@ -123,10 +123,10 @@ class Addphoto extends StatelessWidget {
               child:   
                 SizedBox(
                   width: width*3/4,
-                  child:Column(children: [
+                  child: const Column(children: [
                     Text(
                       "Add a photo of your package",
-                      style: const TextStyle(
+                      style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
                       fontSize: 30
@@ -181,10 +181,10 @@ class Addphoto extends StatelessWidget {
                     decoration: BoxDecoration(
                           border: Border.all(color: Colors.grey, width: 1),
                           color: const Color.fromARGB(120, 0, 0, 0),
-                          borderRadius: BorderRadius.all(Radius.circular(15))
+                          borderRadius: const BorderRadius.all(Radius.circular(15))
                         ),
                     child: 
-                    Padding(
+                    const Padding(
                       padding: EdgeInsets.only(top:20,left: 20,right: 10,bottom: 15),
                       child:  
                       Column(
@@ -192,7 +192,7 @@ class Addphoto extends StatelessWidget {
                         children: [
                           Text(
                             "Make sure that your image",
-                            style:const TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 20),
+                            style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 20),
                             ),
                             SizedBox(height: 20,),
                             Row(

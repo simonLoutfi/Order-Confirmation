@@ -19,8 +19,8 @@ class Camera2 extends StatefulWidget {
     required this.image,
     required this.camera,
     this.adSize = AdSize.banner,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   State<Camera2> createState() => _Camera2State();
@@ -87,15 +87,6 @@ class _Camera2State extends State<Camera2> {
   bannerAd.load();
 }
 
-
-  void _removeAd() {
-    setState(() {
-      localShowAd = 0;
-      _bannerAd?.dispose();
-      _bannerAd = null;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -126,7 +117,7 @@ class _Camera2State extends State<Camera2> {
                         ),
                         child: IconButton(
                           
-                          icon: Icon(Icons.arrow_back_ios_new_rounded, color: const Color(0xFFCCCCCC)),
+                          icon:const Icon(Icons.arrow_back_ios_new_rounded, color:Color(0xFFCCCCCC)),
                           onPressed: () {
                             Navigator.push(
                               context,
@@ -189,7 +180,6 @@ class _Camera2State extends State<Camera2> {
                       width: width,
                       height: height * 0.15,
                       color: Colors.black, 
-                      //decoration: BoxDecoration(border: Border(top: BorderSide(color: Colors.red, width: 2))) ,
                       child: _bannerAd == null
                           ? const SizedBox() 
                           : AdWidget(ad: _bannerAd!),
@@ -210,7 +200,7 @@ class _Camera2State extends State<Camera2> {
                       child: Container(
                       height: 20,
                       width: 80,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         image: DecorationImage(
                                   fit: BoxFit.fill,
                                   image: AssetImage('assets/images/button.jpg'),

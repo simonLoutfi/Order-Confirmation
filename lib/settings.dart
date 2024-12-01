@@ -9,11 +9,11 @@ class Settings extends StatefulWidget {
   final XFile image;
   final List<CameraDescription> camera;
 
-  Settings({
+  const Settings({
     required this.image,
     required this.camera,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   State<Settings> createState() => _SettingsState();
@@ -104,8 +104,8 @@ class _SettingsState extends State<Settings> {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 35, left: 20),
+                const Padding(
+                  padding: EdgeInsets.only(top: 35, left: 20),
                   child: Text(
                     "Settings",
                     style: TextStyle(
@@ -118,8 +118,8 @@ class _SettingsState extends State<Settings> {
                   child: Container(
                     margin: const EdgeInsets.only(top: 20),
                     width: width * 0.85,
-                    decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 44, 44, 44),
+                    decoration: const BoxDecoration(
+                      color:Color.fromARGB(255, 44, 44, 44),
                       borderRadius: BorderRadius.all(
                         Radius.circular(20),
                       ),
@@ -145,13 +145,13 @@ class _SettingsState extends State<Settings> {
                                 builder: (BuildContext context) {
                                   return AlertDialog(
                                     scrollable: true,
-                                    title: Text('Confirmation'),
-                                    content: Padding(
-                                      padding: const EdgeInsets.all(8.0),
+                                    title: const Text('Confirmation'),
+                                    content: const Padding(
+                                      padding: EdgeInsets.all(8.0),
                                       child: Text("Are you sure you want to unlock the app?",style: TextStyle(fontSize: 25),),
                                       ),
                                       actions: [
-                                        ElevatedButton(onPressed: () => Navigator.pop(context), child: Text("Cancel")),
+                                        ElevatedButton(onPressed: () => Navigator.pop(context), child: const Text("Cancel")),
                                         ElevatedButton(onPressed: () {
                                           _saveValues();
                                           Navigator.push(
@@ -162,15 +162,15 @@ class _SettingsState extends State<Settings> {
                                                 image: widget.image,
                                               ),
                                             ),
-                                          );}, child: Text("Confirm"))
+                                          );}, child:const Text("Confirm"))
                                       ],
                                       );});
                             },
                               child:
                                   
-                                 Text(
+                                const Text(
                                 "Unlock App",
-                                style: const TextStyle(
+                                style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 16,
                                 ),
@@ -269,8 +269,8 @@ class _SettingsState extends State<Settings> {
                     ),
                   ),
                 ),
-                 Padding(
-                  padding: const EdgeInsets.only(top: 35, left: 20),
+                 const Padding(
+                  padding: EdgeInsets.only(top: 35, left: 20),
                   child: Text(
                     "My Account",
                     style: TextStyle(
@@ -283,8 +283,8 @@ class _SettingsState extends State<Settings> {
                   child: Container(
                     margin: const EdgeInsets.only(top: 20),
                     width: width * 0.85,
-                    decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 44, 44, 44),
+                    decoration:const BoxDecoration(
+                      color:Color.fromARGB(255, 44, 44, 44),
                       borderRadius: BorderRadius.all(
                         Radius.circular(20),
                       ),
@@ -307,9 +307,9 @@ class _SettingsState extends State<Settings> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(
+                              const Text(
                                 "Username",
-                                style: const TextStyle(
+                                style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 16
                                 ),
@@ -332,9 +332,9 @@ class _SettingsState extends State<Settings> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(
+                              const Text(
                                 "Birthday",
-                                style: const TextStyle(
+                                style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 16,
                                 ),

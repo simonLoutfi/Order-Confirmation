@@ -4,7 +4,7 @@ import 'birthday.dart';
 
 class MyHomePage extends StatelessWidget {
   final List<CameraDescription> camera;
-  MyHomePage({required this.camera});
+  const MyHomePage({super.key, required this.camera});
 
   @override
   Widget build(BuildContext context) {
@@ -30,11 +30,11 @@ class MyHomePage extends StatelessWidget {
                 ), 
               
             ),
-            Container(
+            SizedBox(
               width: width,
               height: height*1/3,
                 child: DecoratedBox(
-                  decoration: BoxDecoration(
+                  decoration:const BoxDecoration(
                       color: Colors.black, 
                       borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(30),
@@ -45,22 +45,25 @@ class MyHomePage extends StatelessWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Padding(
+                        const Padding(
+                          padding: EdgeInsets.only(right: 70,left: 70),
                           child: Text(
                           "Ready to confirm your package?",
-                          style: const TextStyle(
+                          style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
                             fontSize: 25,
                           ),
                           textAlign: TextAlign.center,
                         ),
-                          padding: const EdgeInsets.only(right: 70,left: 70)),
+                          
+                          ),
+                          
 
                         const SizedBox(height: 20),
-                        Text(
+                        const Text(
                           "Start now by filling your order info!",
-                          style: const TextStyle(
+                          style: TextStyle(
                             color: Colors.grey,
                             fontSize: 16,
                           ),
