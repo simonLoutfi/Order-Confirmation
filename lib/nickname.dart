@@ -1,0 +1,251 @@
+import 'package:camera/camera.dart';
+import 'package:flutter/material.dart';
+import 'package:proto/birthday.dart';
+import 'package:proto/gender.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+class Nickname extends StatefulWidget {
+    final List<CameraDescription> camera;
+
+
+    Nickname({required this.camera});
+
+  @override
+  State<Nickname> createState() => _NicknameState();
+}
+
+class _NicknameState extends State<Nickname> {
+  final TextEditingController nameController = TextEditingController();
+
+  Future<void> _loadSavedValues() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      nameController.text = prefs.getString('nickname') ?? ''; 
+    });
+  }
+
+  Future<void> _saveValues() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('nickname', nameController.text);
+  }
+
+    @override
+  void initState() {
+    super.initState();
+    _loadSavedValues();
+  }
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    super.dispose();
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final height = size.height;
+    final width = size.width;
+
+    final pad=width*0.075;
+
+
+    return Scaffold(
+      body: Center(
+        child: 
+           Stack(children: <Widget>[
+            Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  fit: BoxFit.fill,
+                  image: AssetImage(
+                    'assets/images/stock.png',
+                  ),
+                ),
+              ),
+              height: height,
+            ),
+            Container(
+              height: height,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: FractionalOffset.topCenter,
+                  end: FractionalOffset.bottomCenter,
+                  colors: [
+                    Color.fromARGB(200, 0, 0, 0),    
+                    Color.fromARGB(200, 59, 2, 65), 
+                  ],
+                ),
+              ),
+            ),
+
+
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 50, left: 20),
+                        child: Container(
+                          width: 44,
+                          height: 44,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: const Color.fromARGB(255, 123, 123, 123), width: 2),
+                            color: Colors.transparent,
+                            shape: BoxShape.circle,
+                          ),
+                          child: IconButton(
+                            
+                            icon: Icon(Icons.arrow_back_ios_new_rounded, color: const Color.fromARGB(255, 123, 123, 123)),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => Birthday(camera: widget.camera,)),
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 50, right: 20),
+                        child: Stack(
+                                alignment: Alignment.center,
+                                children: [
+                                  Container(
+                                    width: 44,
+                                    height: 44,
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color: const Color.fromARGB(255, 123, 123, 123),
+                                        width: 2, 
+                                      ),
+                                      color: Colors.transparent,
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        "50%",
+                                        style: TextStyle(
+                                          color: Color.fromARGB(255, 123, 123, 123),
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned.fill(
+                                    child: CircularProgressIndicator(
+                                      value: 0.5,
+                                      color: Colors.white,
+                                      strokeWidth: 2,
+                                      backgroundColor: Colors.transparent, // Ensure transparency behind progress
+                                    ),
+                                  ),
+                                ],
+                              ),
+                    )
+                  
+                ],
+            ),
+            Padding(
+              padding: EdgeInsets.only(left:pad, top: 70, right: 20),
+              child:  
+              SizedBox(
+                width: width*0.5,
+                child: Text(
+                  "Enter your name",
+                  style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 30
+                   ),
+                  ),
+              )            
+                
+            ),
+            Padding(
+              padding: EdgeInsets.only(top:70,left: pad),
+              child: 
+                Container(
+                    width: width*0.85,
+                    decoration: BoxDecoration(border: Border.all(color: Colors.grey),borderRadius: BorderRadius.circular(15)),
+                    child: TextField(
+                      controller: nameController,
+                      textAlign: TextAlign.center,
+                      decoration: InputDecoration(
+                        filled: true, 
+                        fillColor: const Color.fromARGB(113, 0, 0, 0), 
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(15),),
+                      ),
+                      style:const TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 35),
+                    ),
+                  
+                )
+
+            ),
+            
+              ],
+            )
+            
+          ]),  
+
+      ),
+      floatingActionButton: Container(
+        decoration: BoxDecoration(
+          shape: BoxShape.circle, 
+          color: Colors.white,    
+        ),
+        child: FloatingActionButton(
+          onPressed: () async {
+            if(nameController.text.isEmpty){
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text("Input Error"),
+                    content: Text("Enter your name!"),
+                    actions: <Widget>[
+                      TextButton(
+                        child: Text("OK"),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  );
+                },
+              );
+
+            }else{
+              await _saveValues();
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Gender(
+                    camera: widget.camera,
+                  ),
+                ),
+              );
+              
+            }
+
+          },
+          elevation: 0,           
+          backgroundColor: Colors.transparent, 
+          child: Icon(
+            Icons.arrow_forward,
+            size: 40,            
+            color: Colors.black,  
+          ),
+        ),
+      ),
+
+
+
+
+    );
+  }
+}
