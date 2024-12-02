@@ -68,28 +68,35 @@ class BirthdayState extends State<Birthday> {
     int currentMonth = DateTime.now().month;
     int currentDay = DateTime.now().day;
 
+    int minimumYear = currentYear - 100;
+
     if (year == null || year > currentYear) {
       return "Year cannot be greater than the current year.";
     }
 
+    if (year < minimumYear) {
+      return "Year cannot be less than $minimumYear.";
+    }
+
     if (month == 2 && day > 29) {
-      return "February has max 29 days";
+      return "February has max 29 days.";
     }
 
     if (month == 2 && day > 28 && !(year % 4 == 0 && (year % 100 != 0 || year % 400 == 0))) {
       return "February has max 28 days in the given year.";
     }
 
-    if (year == currentYear) {
-      if (month > currentMonth) {
-        return "Month cannot be greater than the current month.";
-      } else if (month == currentMonth && day > currentDay) {
-        return "Day cannot be greater than today's date.";
-      }
+  if (year == currentYear) {
+    if (month > currentMonth) {
+      return "Month cannot be greater than the current month.";
+    } else if (month == currentMonth && day > currentDay) {
+      return "Day cannot be greater than today's date.";
     }
-
-    return null;
   }
+
+  return null;
+}
+
 
   @override
   Widget build(BuildContext context) {

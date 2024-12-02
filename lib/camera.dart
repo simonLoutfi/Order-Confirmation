@@ -119,7 +119,7 @@ class _CameraState extends State<Camera> {
                             color: Colors.transparent,
                             shape: BoxShape.circle,
                           ),
-                          child: IconButton(onPressed: _toggleCameraLens, icon: const Icon(Icons.swap_horiz_rounded),color: const Color(0xFFCCCCCC), iconSize: 25,),
+                          child: IconButton(onPressed: _toggleCameraLens, icon: const Icon(Icons.repeat_rounded),color: const Color(0xFFCCCCCC), iconSize: 25,),
                         ),
                       ),
                     ],
