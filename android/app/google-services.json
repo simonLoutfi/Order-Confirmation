@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "802676514185",
+    "project_id": "flutterproto-40c6e",
+    "storage_bucket": "flutterproto-40c6e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:802676514185:android:129705f50e6ecb1f595558",
+        "android_client_info": {
+          "package_name": "com.example.proto"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCFhpoRN3RnxObcR3j5xFil9T1FEfUSqB8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

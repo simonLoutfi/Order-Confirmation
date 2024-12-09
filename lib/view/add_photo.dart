@@ -1,7 +1,7 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:proto/camera.dart';
-import 'package:proto/gender.dart';
+import 'package:proto/view/camera.dart';
+import 'package:proto/view/gender.dart';
 
 
 

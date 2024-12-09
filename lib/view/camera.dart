@@ -1,7 +1,11 @@
+import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:proto/add_photo.dart';
-import 'package:proto/camera2.dart';
+import 'package:flutter/services.dart';
+import 'package:gallery_saver/gallery_saver.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:proto/view/add_photo.dart';
+import 'package:proto/view/camera2.dart';
 import 'dart:developer' as developer;
 
 
@@ -136,19 +140,28 @@ class _CameraState extends State<Camera> {
                             try {
                               await _initializeControllerFuture;
                               final image = await _controller.takePicture();
-                              if (!mounted) return; 
-                              if (context.mounted) {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>  
-                                    Camera2(
-                                      camera: widget.camera,
-                                      image: image,
+                              final ByteData bytes = await rootBundle.load(image.path);
+                              final Uint8List imageData = bytes.buffer.asUint8List();
+                              final tempDir = await getTemporaryDirectory();
+                              final tempPath = '${tempDir.path}/temp_image.jpg';
+
+                              final tempFile = File(tempPath);
+                              await tempFile.writeAsBytes(imageData);
+                              await GallerySaver.saveImage(tempFile.path);
+
+                                if (context.mounted) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>  
+                                      Camera2(
+                                        camera: widget.camera,
+                                        image: image,
+                                      ),
                                     ),
-                                  ),
-                                );
-                              }
+                                  );
+                                }
+
                             } catch (e) {
                               developer.log(e.toString());
                             }

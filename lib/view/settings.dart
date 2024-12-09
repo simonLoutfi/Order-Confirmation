@@ -2,6 +2,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:proto/controller/user_controller.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'camera2.dart';
 
@@ -22,6 +23,8 @@ class Settings extends StatefulWidget {
 class _SettingsState extends State<Settings> {
   final InAppReview _inAppReview = InAppReview.instance;
   String day='',month='',year='',name='';
+  String phone='',feedback='';
+  double rating=0;
 
   final Map<int, String> monthNames = {
     1: 'Jan',
@@ -42,13 +45,24 @@ class _SettingsState extends State<Settings> {
 
   Future<void> _loadSavedValues() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    
     setState(() {
       day = prefs.getString('birthday_day') ?? ''; 
-      month = prefs.getString('birthday_month') ?? '';
       year = prefs.getString('birthday_year') ?? ''; 
       name = prefs.getString('nickname') ?? ''; 
-    });
+      phone = prefs.getString('phone') ?? ''; 
+
+      final monthValue = prefs.getString('birthday_month') ?? '';
+      if (monthValue.isNotEmpty) {
+        int? numericMonth = int.tryParse(monthValue);
+        month = numericMonth != null && monthNames.containsKey(numericMonth)
+            ? monthNames[numericMonth]!
+            : ''; 
+      }
+    }
+    );
   }
+
 
   Future<void> _saveValues() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -56,10 +70,16 @@ class _SettingsState extends State<Settings> {
 
   }
 
-    @override
+  Future<void> _initializeSettings() async {
+    rating = await UserController().getRating();
+    feedback = await UserController().getFeedback();
+  }
+
+  @override
   void initState() {
     super.initState();
     _loadSavedValues();
+    
   }
 
   @override
@@ -67,6 +87,10 @@ class _SettingsState extends State<Settings> {
     var size = MediaQuery.of(context).size;
     var height = size.height;
     var width = size.width;
+
+    UserController().addPhoneUser(phone);
+    _initializeSettings();
+
 
     return Scaffold(
       body: Center(
@@ -99,7 +123,15 @@ class _SettingsState extends State<Settings> {
                         color: Color.fromARGB(255, 123, 123, 123),
                       ),
                       onPressed: () {
-                        Navigator.pop(context);
+                        Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => Camera2(
+                            camera: widget.camera,
+                            image: widget.image,
+                          ),
+                        ),
+                      );
                       },
                     ),
                   ),
@@ -139,33 +171,74 @@ class _SettingsState extends State<Settings> {
                             ),
                           ),
                           child:InkWell(
-                            onTap: () {
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    scrollable: true,
-                                    title: const Text('Confirmation'),
-                                    content: const Padding(
-                                      padding: EdgeInsets.all(8.0),
-                                      child: Text("Are you sure you want to unlock the app?",style: TextStyle(fontSize: 25),),
-                                      ),
-                                      actions: [
-                                        ElevatedButton(onPressed: () => Navigator.pop(context), child: const Text("Cancel")),
-                                        ElevatedButton(onPressed: () {
-                                          _saveValues();
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) => Camera2(
-                                                camera: widget.camera,
-                                                image: widget.image,
+                            onTap: () async {
+                                try {
+                                  final isLocked = await UserController().getLock();
+
+                                  if (!isLocked) {
+                                    if(mounted){
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(
+                                          content: Text("App already unlocked"),
+                                        ),
+                                      );
+                                    }
+
+                                  } else {
+                                      if(mounted){
+                                        showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            scrollable: true,
+                                            title: const Text('Confirmation'),
+                                            content: const Padding(
+                                              padding: EdgeInsets.all(8.0),
+                                              child: Text(
+                                                "Are you sure you want to unlock the app?",
+                                                style: TextStyle(fontSize: 25),
                                               ),
                                             ),
-                                          );}, child:const Text("Confirm"))
-                                      ],
-                                      );});
-                            },
+                                            actions: [
+                                              ElevatedButton(
+                                                onPressed: () => Navigator.pop(context),
+                                                child: const Text("Cancel"),
+                                              ),
+                                              ElevatedButton(
+                                                onPressed: () {
+                                                  UserController().setLock();
+                                                  _saveValues();
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) => Camera2(
+                                                        camera: widget.camera,
+                                                        image: widget.image,
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
+                                                child: const Text("Confirm"),
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    }
+                                    
+                                  }
+                                } catch (e) {
+                                  if(mounted){
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text("An error occurred: $e"),
+                                    ),
+                                  );
+                                  }
+                                  
+                                }
+                              },
+
                               child:
                                   
                                 const Text(
@@ -183,9 +256,9 @@ class _SettingsState extends State<Settings> {
                             showDialog(
                               context: context,
                               builder: (BuildContext context) {
-                                double selectedRating = 0.0;
+                                double selectedRating =  rating;
                                 final TextEditingController feedbackController = TextEditingController();
-
+                                feedbackController.text=feedback;
                                 return StatefulBuilder(
                                   builder: (context, setState) {
                                     return AlertDialog(
@@ -234,6 +307,7 @@ class _SettingsState extends State<Settings> {
                                         ElevatedButton(
                                           child: Text(selectedRating >= 4 ? "Review" : "Submit"),
                                           onPressed: () {
+                                            UserController().setRate(selectedRating, feedbackController.text);
                                             if (selectedRating >= 4) {
                                               _requestReview();
                                             } else if (feedbackController.text.isNotEmpty) {
@@ -340,7 +414,7 @@ class _SettingsState extends State<Settings> {
                                 ),
                               ),
                               Text(
-                                "$day ${monthNames[int.parse(month)]} $year",
+                                "$day $month $year",
                                 style: const TextStyle(
                                   color: Colors.grey,
                                   fontSize: 15,
