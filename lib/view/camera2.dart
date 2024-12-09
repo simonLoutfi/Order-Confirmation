@@ -2,9 +2,13 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:proto/settings.dart';
+import 'package:proto/controller/user_controller.dart';
+import 'package:proto/model/user_model.dart';
+import 'package:proto/view/phone.dart';
+import 'package:proto/view/settings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'camera.dart';
+
 
 class Camera2 extends StatefulWidget {
   final XFile image;
@@ -28,23 +32,39 @@ class Camera2 extends StatefulWidget {
 
 class _Camera2State extends State<Camera2> {
   BannerAd? _bannerAd;
-  int? showAd;
+  bool? showAd, addedPhone, acc;
   int? localShowAd=1;
+  String? day,month,year,name,gender;
 
   Future<void> _loadSavedValues() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      showAd = (prefs.getInt('ad') ?? '') as int?; 
-    });
+    day=prefs.getString('birthday_day');
+    month=prefs.getString('birthday_month');
+    year=prefs.getString('birthday_year');
+    name=prefs.getString('nickname');
+    gender=prefs.getString('gender');
+  }
+
+  Future<void> _initializeShowAd() async {
+    final value = await UserController().getLock();
+    setState(() {showAd=value;});
+  }
+
+  Future<void> _initializeSettings() async {
+    addedPhone = await UserController().getPhone();
+    acc = await UserController().getName();
   }
 
   @override
   void initState() {
     super.initState();
     _loadSavedValues();
+    _initializeShowAd();
     if (localShowAd == 1){
       _loadAd();
     }
+    
+    
   }
 
   @override
@@ -87,12 +107,14 @@ class _Camera2State extends State<Camera2> {
   bannerAd.load();
 }
 
+
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     var height = size.height;
     var width = size.width;
-
+    _initializeSettings();
     return Scaffold(
       body: Stack(
         children: [
@@ -144,22 +166,46 @@ class _Camera2State extends State<Camera2> {
                       color: Color(0xFFCCCCCC),
                     ),
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => Settings(
-                            camera: widget.camera,
-                            image: widget.image,
-                          ),
-                        ),
-                      );
+                      if(acc!){
+                          if(addedPhone!){
+                            Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => Settings(
+                                camera: widget.camera,
+                                image: widget.image,
+                              ),
+                            ),
+                          );
+                        }else{
+                            Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => Phone(
+                                camera: widget.camera,
+                                image: widget.image,
+                              ),
+                            ),
+                          );
+                        }
+                      }
+                      else{
+                        ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text("Create an account first by clicking the banner x button"),
+                                      ),
+                                    );
+                      }
+                      
+                      
                     },
                   ),
                 ),
               ),
             ],
           ),
-          if (showAd != 1 || localShowAd==0)
+          if (showAd != true || localShowAd==0)
+          
             Align(
                 alignment: Alignment.bottomCenter,
                 child: Container(
@@ -191,11 +237,13 @@ class _Camera2State extends State<Camera2> {
                     child: 
                     InkWell(
                       onTap: () {
+                        final user = UserModel(day: day!, month: month!, year: year!, name: name!, gender: gender!,image: widget.image.path);
+                        UserController().createUser(user);
                         setState(() {
                             localShowAd = 0; 
                             _bannerAd?.dispose(); 
                             _bannerAd = null;
-                          });
+                        });
                       },
                       child: Container(
                       height: 20,

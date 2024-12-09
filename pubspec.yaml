@@ -42,6 +42,14 @@ dependencies:
   in_app_review: ^2.0.9
   flutter_rating_bar: ^4.0.0
   shared_preferences: ^2.0.15
+  firebase_core: ^3.8.0
+  firebase_crashlytics: ^4.1.5
+  firebase_analytics: ^11.3.5
+  firebase_auth: ^5.3.3
+  cloud_firestore: ^5.5.0
+  gallery_saver: ^2.0.3
+  intl_phone_number_input: ^0.7.4
+  flutter_otp_text_field: ^1.2.0
 
 dev_dependencies:
   flutter_test:

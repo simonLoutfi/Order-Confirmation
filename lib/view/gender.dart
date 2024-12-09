@@ -1,6 +1,6 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:proto/add_photo.dart';
+import 'package:proto/view/add_photo.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'nickname.dart';
 
@@ -119,7 +119,7 @@ class _GenderState extends State<Gender> {
                                       value: 0.75,
                                       color: Colors.white,
                                       strokeWidth: 2,
-                                      backgroundColor: Colors.transparent, // Ensure transparency behind progress
+                                      backgroundColor: Colors.transparent, 
                                     ),
                                   ),
                                 ],
