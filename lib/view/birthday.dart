@@ -1,13 +1,10 @@
-import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:proto/controller/preferences_controller.dart';
 import 'home.dart';
 import 'nickname.dart';
 
 class Birthday extends StatefulWidget {
-
-    final List<CameraDescription> camera;
-    const Birthday({super.key, required this.camera});
+  const Birthday({super.key});
 
   @override
   BirthdayState createState() => BirthdayState();
@@ -19,24 +16,13 @@ class BirthdayState extends State<Birthday> {
   final TextEditingController yearController = TextEditingController();
 
   Future<void> _loadSavedValues() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      dayController.text = prefs.getString('birthday_day') ?? ''; 
-      monthController.text = prefs.getString('birthday_month') ?? '';
-      yearController.text = prefs.getString('birthday_year') ?? ''; 
-    });
+    dayController.text = await PreferencesController().loadSavedDay();
+    monthController.text = await PreferencesController().loadSavedMonth();
+    yearController.text = await PreferencesController().loadSavedYear();
   }
 
-  Future<void> _saveValues() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('birthday_day', dayController.text);
-    await prefs.setString('birthday_month', monthController.text);
-    await prefs.setString('birthday_year', yearController.text);
-    await prefs.setInt('ad', 1);
 
-  }
-
-    @override
+  @override
   void initState() {
     super.initState();
     _loadSavedValues();
@@ -103,6 +89,8 @@ class BirthdayState extends State<Birthday> {
     var size = MediaQuery.of(context).size;
     var height = size.height;
     var width = size.width;
+    PreferencesController().saveLastVisitedPage("birthday.dart");
+    
 
     return Scaffold(
       body: Center(
@@ -152,7 +140,7 @@ class BirthdayState extends State<Birthday> {
                           onPressed: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => MyHomePage(camera: widget.camera,)),
+                              MaterialPageRoute(builder: (context) =>const MyHomePage()),
                             );
                           },
                         ),
@@ -169,7 +157,7 @@ class BirthdayState extends State<Birthday> {
                                   decoration: BoxDecoration(
                                     border: Border.all(
                                       color: const Color.fromARGB(255, 123, 123, 123),
-                                      width: 2, // Grey border thickness
+                                      width: 2, 
                                     ),
                                     color: Colors.transparent,
                                     shape: BoxShape.circle,
@@ -322,7 +310,7 @@ class BirthdayState extends State<Birthday> {
                     ),
                   );
             } else {
-                await _saveValues();
+                await PreferencesController().saveBirthday(dayController.text, monthController.text, yearController.text);
 
                 if (!mounted) return; 
                 
@@ -330,9 +318,7 @@ class BirthdayState extends State<Birthday> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => Nickname(
-                        camera: widget.camera,
-                      ),
+                      builder: (context) =>const Nickname(),
                     ),
                   );
                 }

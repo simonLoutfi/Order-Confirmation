@@ -7,7 +7,7 @@ class User {
   static final User instance = User._privateConstructor();
 
   final _db = FirebaseFirestore.instance;
-  static String userId='';
+  String userId='';
 
   createUser(UserModel user) async{
     CollectionReference coll = _db.collection("Users");

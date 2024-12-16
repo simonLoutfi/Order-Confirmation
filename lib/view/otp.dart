@@ -1,15 +1,10 @@
-import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:proto/controller/otp_controller.dart';
 import 'package:proto/view/phone.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 
 class Otp extends StatefulWidget {
-
-    final List<CameraDescription> camera;
-    final XFile image;
-
-    const Otp({super.key, required this.camera, required this.image});
+  const Otp({super.key});
 
   @override
   OtpState createState() => OtpState();
@@ -78,7 +73,7 @@ class OtpState extends State<Otp> {
                           onPressed: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => Phone(camera: widget.camera,image: widget.image,)),
+                              MaterialPageRoute(builder: (context) => Phone()),
                             );
                           },
                         ),
@@ -112,7 +107,7 @@ class OtpState extends State<Otp> {
                       onCodeChanged: (String code) {         
                       },
                       onSubmit: (String verificationCode){
-                        OTPController(camera: widget.camera,image: widget.image).verifyOTP(verificationCode,context);
+                        OTPController().verifyOTP(verificationCode,context);
 
                       }, 
                   ),

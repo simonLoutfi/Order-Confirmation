@@ -1,6 +1,6 @@
-import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:proto/controller/authentication_controller.dart';
+import 'package:proto/controller/preferences_controller.dart';
 import 'package:proto/view/camera2.dart';
 import 'package:proto/view/otp.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -10,10 +10,7 @@ import 'dart:developer' as developer;
 
 
 class Phone extends StatefulWidget {
-    final List<CameraDescription> camera;
-    final XFile image;
-
-    const Phone({super.key, required this.camera, required this.image});
+  const Phone({super.key});
 
   @override
   State<Phone> createState() => _PhoneState();
@@ -101,7 +98,7 @@ class _PhoneState extends State<Phone> {
                             onPressed: () {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => Camera2(camera: widget.camera,image: widget.image,)),
+                                MaterialPageRoute(builder: (context) => Camera2()),
                               );
                             },
                           ),
@@ -206,10 +203,7 @@ class _PhoneState extends State<Phone> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => Otp(
-                                          camera: widget.camera,
-                                          image: widget.image,
-                                        ),
+                                        builder: (context) =>const Otp(),
                                       ),
                                     );
                                   }

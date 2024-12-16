@@ -1,49 +1,51 @@
-import 'dart:io';
+//import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:gallery_saver/gallery_saver.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:proto/controller/preferences_controller.dart';
+import 'package:proto/riverpod.dart';
+//import 'package:flutter/services.dart';
+//import 'package:gallery_saver/gallery_saver.dart';
+//import 'package:path_provider/path_provider.dart';
 import 'package:proto/view/add_photo.dart';
 import 'package:proto/view/camera2.dart';
 import 'dart:developer' as developer;
 
 
-class Camera extends StatefulWidget {
-  final List<CameraDescription> camera;
-
-  const Camera({
-    required this.camera,
-    super.key,
-  });
+class Camera extends ConsumerStatefulWidget  {
+  const Camera({super.key});
 
   @override
-  State<Camera> createState() => _CameraState();
+  ConsumerState<Camera> createState() => _CameraState();
 }
 
-class _CameraState extends State<Camera> {
+class _CameraState extends ConsumerState<Camera> {
   late CameraController _controller;
   late Future<void> _initializeControllerFuture;
+  List<CameraDescription> camera=[];
 
   @override
   void initState() {
     super.initState();
+      final cameraProvider = ref.read(riverpod);
+      camera = cameraProvider.camera;
     _controller = CameraController(
-      widget.camera.first,
+      camera.first,
       ResolutionPreset.high,
     );
     _initializeControllerFuture = _controller.initialize();
+    
   }
 
   @override
   void dispose() {
+
     _controller.dispose();
     super.dispose();
   }
 
   Future<void> _initCamera(CameraDescription description) async{
     _controller = CameraController(description, ResolutionPreset.max, enableAudio: true);
-
     try{
       await _controller.initialize();
       setState((){}); 
@@ -57,10 +59,10 @@ class _CameraState extends State<Camera> {
     final lensDirection =  _controller.description.lensDirection;
     CameraDescription newDescription;
     if(lensDirection == CameraLensDirection.front){
-        newDescription = widget.camera.firstWhere((description) => description.lensDirection == CameraLensDirection.back);
+        newDescription = camera.firstWhere((description) => description.lensDirection == CameraLensDirection.back);
     }
     else{
-        newDescription = widget.camera.firstWhere((description) => description.lensDirection == CameraLensDirection.front);
+        newDescription = camera.firstWhere((description) => description.lensDirection == CameraLensDirection.front);
     }
 
     _initCamera(newDescription);
@@ -71,6 +73,9 @@ class _CameraState extends State<Camera> {
     var size = MediaQuery.of(context).size;
     var height = size.height;
     var width = size.width;
+    camera=(ref.watch(riverpod).camera);
+    PreferencesController().saveLastVisitedPage("camera.dart");
+
 
     return FutureBuilder<void>(
       future: _initializeControllerFuture,
@@ -108,7 +113,7 @@ class _CameraState extends State<Camera> {
                             onPressed: () {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => Addphoto(camera: widget.camera)),
+                                MaterialPageRoute(builder: (context) => Addphoto()),
                               );
                             },
                           ),
@@ -140,24 +145,21 @@ class _CameraState extends State<Camera> {
                             try {
                               await _initializeControllerFuture;
                               final image = await _controller.takePicture();
-                              final ByteData bytes = await rootBundle.load(image.path);
-                              final Uint8List imageData = bytes.buffer.asUint8List();
-                              final tempDir = await getTemporaryDirectory();
-                              final tempPath = '${tempDir.path}/temp_image.jpg';
+                              // final ByteData bytes = await rootBundle.load(image.path);
+                              // final Uint8List imageData = bytes.buffer.asUint8List();
+                              // final tempDir = await getTemporaryDirectory();
+                              // final tempPath = '${tempDir.path}/temp_image.jpg';
 
-                              final tempFile = File(tempPath);
-                              await tempFile.writeAsBytes(imageData);
-                              await GallerySaver.saveImage(tempFile.path);
-
+                              // final tempFile = File(tempPath);
+                              // await tempFile.writeAsBytes(imageData);
+                              // await GallerySaver.saveImage(tempFile.path);
+                              await PreferencesController().saveImage(image.path);
                                 if (context.mounted) {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) =>  
-                                      Camera2(
-                                        camera: widget.camera,
-                                        image: image,
-                                      ),
+                                      Camera2(),
                                     ),
                                   );
                                 }
