@@ -1,48 +1,45 @@
 import 'dart:io';
-import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:proto/controller/preferences_controller.dart';
 import 'package:proto/controller/user_controller.dart';
 import 'package:proto/model/user_model.dart';
+import 'package:proto/riverpod.dart';
 import 'package:proto/view/phone.dart';
 import 'package:proto/view/settings.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'camera.dart';
 
 
-class Camera2 extends StatefulWidget {
-  final XFile image;
-  final List<CameraDescription> camera;
-
+class Camera2 extends ConsumerStatefulWidget {
   final AdSize adSize;
   final String adUnitId = Platform.isAndroid
       ? 'ca-app-pub-3940256099942544/6300978111' 
       : 'ca-app-pub-3940256099942544/2935281174'; 
 
   Camera2({
-    required this.image,
-    required this.camera,
     this.adSize = AdSize.banner,
     super.key,
   });
 
   @override
-  State<Camera2> createState() => _Camera2State();
+  ConsumerState<Camera2> createState() => _Camera2State();
 }
 
-class _Camera2State extends State<Camera2> {
+class _Camera2State extends ConsumerState<Camera2> {
   BannerAd? _bannerAd;
   bool? showAd, addedPhone, acc;
   int? localShowAd=1;
   String? day,month,year,name,gender;
+  String? imagePath;
 
   Future<void> _loadSavedValues() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    day=prefs.getString('birthday_day');
-    month=prefs.getString('birthday_month');
-    year=prefs.getString('birthday_year');
-    name=prefs.getString('nickname');
-    gender=prefs.getString('gender');
+    day=await PreferencesController().loadSavedDay();
+    month=await PreferencesController().loadSavedMonth();
+    year=await PreferencesController().loadSavedYear();
+    name=await PreferencesController().loadSavedName();
+    imagePath=await PreferencesController().loadSavedImage();
+    gender=ref.watch(riverpod).gender;
   }
 
   Future<void> _initializeShowAd() async {
@@ -115,12 +112,18 @@ class _Camera2State extends State<Camera2> {
     var height = size.height;
     var width = size.width;
     _initializeSettings();
+    PreferencesController().saveLastVisitedPage("camera2.dart");
+
     return Scaffold(
-      body: Stack(
+      body: imagePath == null
+        ? const Center(
+            child: CircularProgressIndicator(), 
+          )
+          : Stack(
         children: [
           Positioned.fill(
             child: Image.file(
-              File(widget.image.path),
+              File(imagePath!),
               fit: BoxFit.cover,
             ),
           ),
@@ -143,7 +146,7 @@ class _Camera2State extends State<Camera2> {
                           onPressed: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => Camera(camera: widget.camera,)),
+                              MaterialPageRoute(builder: (context) => const Camera()),
                             );
                           },
                         ),
@@ -171,20 +174,14 @@ class _Camera2State extends State<Camera2> {
                             Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => Settings(
-                                camera: widget.camera,
-                                image: widget.image,
-                              ),
+                              builder: (context) =>const Settings(),
                             ),
                           );
                         }else{
                             Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => Phone(
-                                camera: widget.camera,
-                                image: widget.image,
-                              ),
+                              builder: (context) =>const Phone(),
                             ),
                           );
                         }
@@ -237,7 +234,7 @@ class _Camera2State extends State<Camera2> {
                     child: 
                     InkWell(
                       onTap: () {
-                        final user = UserModel(day: day!, month: month!, year: year!, name: name!, gender: gender!,image: widget.image.path);
+                        final user = UserModel(day: day!, month: month!, year: year!, name: name!, gender: gender!,image: imagePath!);
                         UserController().createUser(user);
                         setState(() {
                             localShowAd = 0; 

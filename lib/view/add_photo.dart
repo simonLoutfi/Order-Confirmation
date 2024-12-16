@@ -1,23 +1,21 @@
-import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:proto/controller/preferences_controller.dart';
 import 'package:proto/view/camera.dart';
 import 'package:proto/view/gender.dart';
 
 
 
 class Addphoto extends StatelessWidget {
-    final List<CameraDescription> camera;
-
-
-    Addphoto({super.key, required this.camera});
-
   final TextEditingController nameController = TextEditingController();
+
+  Addphoto({super.key});
 
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     var height = size.height;
     var width = size.width;
+    PreferencesController().saveLastVisitedPage("Addphoto.dart");
 
     return Scaffold(
       body: Center(
@@ -71,7 +69,7 @@ class Addphoto extends StatelessWidget {
                             onPressed: () {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => Gender(camera: camera)),
+                                MaterialPageRoute(builder: (context) => Gender()),
                               );
                             },
                           ),
@@ -145,9 +143,7 @@ class Addphoto extends StatelessWidget {
                     Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => Camera(
-                              camera: camera,
-                            ),
+                            builder: (context) => Camera(),
                           ),
                         );
                   },

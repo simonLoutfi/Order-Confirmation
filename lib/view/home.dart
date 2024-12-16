@@ -1,10 +1,10 @@
-import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:proto/controller/preferences_controller.dart';
 import 'birthday.dart';
 
 class MyHomePage extends StatelessWidget {
-  final List<CameraDescription> camera;
-  const MyHomePage({super.key, required this.camera});
+  const MyHomePage({super.key});
+
 
   @override
   Widget build(BuildContext context) {
@@ -12,6 +12,7 @@ class MyHomePage extends StatelessWidget {
     var height = size.height;
     var width = size.width;
     
+    PreferencesController().saveLastVisitedPage("home.dart");
 
     return Scaffold(
       body: Center(
@@ -74,7 +75,7 @@ class MyHomePage extends StatelessWidget {
                           onPressed: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => Birthday(camera: camera,)),
+                              MaterialPageRoute(builder: (context) => const Birthday()),
                             );
                           },
                           style: ElevatedButton.styleFrom(

@@ -1,15 +1,10 @@
-import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:proto/controller/preferences_controller.dart';
 import 'package:proto/view/birthday.dart';
 import 'package:proto/view/gender.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class Nickname extends StatefulWidget {
-    final List<CameraDescription> camera;
-
-
-    const Nickname({super.key, required this.camera});
-
+  const Nickname({super.key});
   @override
   State<Nickname> createState() => _NicknameState();
 }
@@ -18,18 +13,10 @@ class _NicknameState extends State<Nickname> {
   final TextEditingController nameController = TextEditingController();
 
   Future<void> _loadSavedValues() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      nameController.text = prefs.getString('nickname') ?? ''; 
-    });
+    nameController.text =await PreferencesController().loadSavedName();
   }
 
-  Future<void> _saveValues() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('nickname', nameController.text);
-  }
-
-    @override
+  @override
   void initState() {
     super.initState();
     _loadSavedValues();
@@ -49,6 +36,7 @@ class _NicknameState extends State<Nickname> {
     final width = size.width;
 
     final pad=width*0.075;
+    PreferencesController().saveLastVisitedPage("nickname.dart");
 
 
     return Scaffold(
@@ -103,7 +91,7 @@ class _NicknameState extends State<Nickname> {
                             onPressed: () {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => Birthday(camera: widget.camera,)),
+                                MaterialPageRoute(builder: (context) => const Birthday()),
                               );
                             },
                           ),
@@ -208,16 +196,12 @@ class _NicknameState extends State<Nickname> {
                   );
 
             }else{
-              await _saveValues();
-              if (!mounted) return; 
-                
+              await PreferencesController().saveName(nameController.text); 
               if (context.mounted) {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => Gender(
-                    camera: widget.camera,
-                  ),
+                  builder: (context) =>const Gender(),
                 ),
               );
               }

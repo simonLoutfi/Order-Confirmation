@@ -1,31 +1,24 @@
-import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:proto/controller/preferences_controller.dart';
+import 'package:proto/riverpod.dart';
 import 'package:proto/view/add_photo.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'nickname.dart';
 
-class Gender extends StatefulWidget {
-    final List<CameraDescription> camera;
-
-
-    const Gender({super.key, required this.camera});
+class Gender extends ConsumerStatefulWidget {
+  const Gender({super.key});
 
   @override
-  State<Gender> createState() => _GenderState();
+  ConsumerState<Gender> createState() => _GenderState();
 }
 
-class _GenderState extends State<Gender> {
-
-  Future<void> _saveValues(gender) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('gender', gender);
-  }
-
+class _GenderState extends ConsumerState<Gender> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     var height = size.height;
     var width = size.width;
+    PreferencesController().saveLastVisitedPage("gender.dart");
 
     
 
@@ -81,7 +74,7 @@ class _GenderState extends State<Gender> {
                             onPressed: () {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => Nickname(camera: widget.camera)),
+                                MaterialPageRoute(builder: (context) =>const Nickname()),
                               );
                             },
                           ),
@@ -159,15 +152,16 @@ class _GenderState extends State<Gender> {
                   child: 
                     InkWell(
                       onTap: () {
-                        _saveValues("male");
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => Addphoto(
-                              camera: widget.camera,
+                      ref.read(riverpod).setGender('male');
+                        if(context.mounted){
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => Addphoto(),
                             ),
-                          ),
-                        );
+                          );
+                        }
+
                       },
                       child: Container(
                       width: width*0.85,
@@ -192,15 +186,16 @@ class _GenderState extends State<Gender> {
                 Center(
                   child: InkWell(
                     onTap: () {
-                        _saveValues("female");
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => Addphoto(
-                              camera: widget.camera,
+                      ref.read(riverpod).setGender('female');
+                        if(context.mounted){
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => Addphoto(),
                             ),
-                          ),
-                        );
+                          );
+                        }
+
                       },
                     child: Container(
                     width: width*0.85,
@@ -225,15 +220,16 @@ class _GenderState extends State<Gender> {
             Center(
                   child: InkWell(
                     onTap: () {
-                        _saveValues("other");
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => Addphoto(
-                              camera: widget.camera,
+                      ref.read(riverpod).setGender('other');
+                        if(context.mounted){
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => Addphoto(),
                             ),
-                          ),
-                        );
+                          );
+                        }
+                        
                       },
                     child: Container(
                     width: width*0.85,

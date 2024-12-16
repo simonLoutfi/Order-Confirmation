@@ -1,20 +1,14 @@
-import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:proto/controller/preferences_controller.dart';
 import 'package:proto/controller/user_controller.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'camera2.dart';
 
 class Settings extends StatefulWidget {
-  final XFile image;
-  final List<CameraDescription> camera;
+  const Settings({super.key});
 
-  const Settings({
-    required this.image,
-    required this.camera,
-    super.key,
-  });
 
   @override
   State<Settings> createState() => _SettingsState();
@@ -126,10 +120,7 @@ class _SettingsState extends State<Settings> {
                         Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => Camera2(
-                            camera: widget.camera,
-                            image: widget.image,
-                          ),
+                          builder: (context) => Camera2(),
                         ),
                       );
                       },
@@ -176,7 +167,7 @@ class _SettingsState extends State<Settings> {
                                   final isLocked = await UserController().getLock();
 
                                   if (!isLocked) {
-                                    if(mounted){
+                                    if(context.mounted){
                                       ScaffoldMessenger.of(context).showSnackBar(
                                         const SnackBar(
                                           content: Text("App already unlocked"),
@@ -185,7 +176,7 @@ class _SettingsState extends State<Settings> {
                                     }
 
                                   } else {
-                                      if(mounted){
+                                      if(context.mounted){
                                         showDialog(
                                         context: context,
                                         builder: (BuildContext context) {
@@ -211,10 +202,7 @@ class _SettingsState extends State<Settings> {
                                                   Navigator.push(
                                                     context,
                                                     MaterialPageRoute(
-                                                      builder: (context) => Camera2(
-                                                        camera: widget.camera,
-                                                        image: widget.image,
-                                                      ),
+                                                      builder: (context) => Camera2(),
                                                     ),
                                                   );
                                                 },
@@ -228,7 +216,7 @@ class _SettingsState extends State<Settings> {
                                     
                                   }
                                 } catch (e) {
-                                  if(mounted){
+                                  if(context.mounted){
                                     ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
                                       content: Text("An error occurred: $e"),
