@@ -169,4 +169,18 @@ Future<bool> getName() async {
       }
       
     }
+
+    setReminder(bool reminder) async{
+      CollectionReference coll = _db.collection("Users");
+      await coll.doc(userId).set(
+        {
+          "reminder":reminder,
+        },
+        SetOptions(merge: true)
+      )
+      .then((k)=>developer.log("reminder added successfully"))
+      .catchError((error) {
+        developer.log('Error creating document: $error');
+      });
+    }
 }

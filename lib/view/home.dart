@@ -1,10 +1,46 @@
 import 'package:flutter/material.dart';
 import 'package:proto/controller/preferences_controller.dart';
 import 'birthday.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'dart:developer' as developer;
 
-class MyHomePage extends StatelessWidget {
+
+class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
 
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+
+  @override
+  void initState() {
+    super.initState();
+    _setupFirebaseMessaging();
+  }
+
+  void _setupFirebaseMessaging() {
+  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    developer.log('Message received while in foreground:');
+    developer.log('Title: ${message.notification?.title}');
+    developer.log('Body: ${message.notification?.body}');
+  });
+
+  FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+    developer.log('Message opened from background:');
+    developer.log('Title: ${message.notification?.title}');
+    developer.log('Body: ${message.notification?.body}');
+  });
+
+  FirebaseMessaging.instance.getInitialMessage().then((RemoteMessage? message) {
+    if (message != null) {
+      developer.log('Notification caused app to open:');
+      developer.log('Title: ${message.notification?.title}');
+      developer.log('Body: ${message.notification?.body}');
+    }
+  });
+}
 
   @override
   Widget build(BuildContext context) {
