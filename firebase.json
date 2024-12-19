@@ -1,1 +1,47 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"flutterproto-40c6e","appId":"1:802676514185:android:129705f50e6ecb1f595558","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"flutterproto-40c6e","configurations":{"android":"1:802676514185:android:129705f50e6ecb1f595558","ios":"1:802676514185:ios:672eaa4f1183e7dd595558"}}}}}}
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "flutterproto-40c6e",
+          "appId": "1:802676514185:android:129705f50e6ecb1f595558",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "flutterproto-40c6e",
+          "configurations": {
+            "android": "1:802676514185:android:129705f50e6ecb1f595558",
+            "ios": "1:802676514185:ios:672eaa4f1183e7dd595558"
+          }
+        }
+      }
+    }
+  },
+  "functions": [
+    {
+      "source": "functions",
+      "codebase": "default",
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        "*.local"
+      ],
+      "predeploy": [
+        "npm --prefix \"$RESOURCE_DIR\" run lint"
+      ]
+    }
+  ],
+  "emulators": {
+    "functions": {
+      "port": 5001
+    },
+    "ui": {
+      "enabled": true
+    },
+    "singleProjectMode": true
+  }
+}

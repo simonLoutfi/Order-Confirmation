@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:proto/controller/authentication_controller.dart';
-import 'package:proto/controller/preferences_controller.dart';
 import 'package:proto/view/camera2.dart';
 import 'package:proto/view/otp.dart';
 import 'package:shared_preferences/shared_preferences.dart';

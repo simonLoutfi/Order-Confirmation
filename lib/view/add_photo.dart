@@ -69,7 +69,7 @@ class Addphoto extends StatelessWidget {
                             onPressed: () {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => Gender()),
+                                MaterialPageRoute(builder: (context) => const Gender()),
                               );
                             },
                           ),
@@ -143,7 +143,7 @@ class Addphoto extends StatelessWidget {
                     Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => Camera(),
+                            builder: (context) => const Camera(),
                           ),
                         );
                   },

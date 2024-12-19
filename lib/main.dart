@@ -18,9 +18,8 @@ import 'package:firebase_core/firebase_core.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  unawaited(MobileAds.instance.initialize());
+  MobileAds.instance.initialize();
   final cameras = await availableCameras();
-  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   FlutterError.onError = (errorDetails) {
     FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
@@ -29,22 +28,30 @@ Future<void> main() async {
     FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
     return true;
   };
+
   String? lastVisitedPage =await PreferencesController().getLastVisitedPage();
   runApp(ProviderScope(child: MyApp(camera: cameras,initialRoute: lastVisitedPage!)));
 }
 
-class MyApp extends ConsumerWidget {
+class MyApp extends ConsumerStatefulWidget {
   final List<CameraDescription> camera;
   final String initialRoute;
 
   const MyApp({super.key,required this.camera,required this.initialRoute,});
 
   @override
-  Widget build(BuildContext context,WidgetRef ref) {
-    ref.read(riverpod).setCamera(camera);
+  ConsumerState<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends ConsumerState<MyApp> {
+
+
+@override
+  Widget build(BuildContext context) {
+    ref.read(riverpod).setCamera(widget.camera);
     return MaterialApp(
       title: 'Proto',
-      initialRoute: initialRoute,
+      initialRoute: widget.initialRoute,
       routes: {
         'home.dart': (context) => const MyHomePage(),
         'birthday.dart': (context) =>const Birthday(),

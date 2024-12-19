@@ -37,4 +37,9 @@ class UserController {
   Future<String> getFeedback() async{
     return await User.instance.getFeedback();
   }
+
+  setReminder(bool reminder) async{
+    await User.instance.setReminder(reminder);
+  }
+  
 }

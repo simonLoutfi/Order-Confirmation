@@ -10,7 +10,7 @@ class OTPController {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => Settings(),
+        builder: (context) => const Settings(),
       ),
     );
   } else if (context.mounted) {

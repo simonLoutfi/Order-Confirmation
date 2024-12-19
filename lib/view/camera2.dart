@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gal/gal.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:proto/controller/preferences_controller.dart';
 import 'package:proto/controller/user_controller.dart';
@@ -233,7 +234,8 @@ class _Camera2State extends ConsumerState<Camera2> {
                     right: 1, 
                     child: 
                     InkWell(
-                      onTap: () {
+                      onTap: () async {
+                        await Gal.putImage(await PreferencesController().loadSavedImage());
                         final user = UserModel(day: day!, month: month!, year: year!, name: name!, gender: gender!,image: imagePath!);
                         UserController().createUser(user);
                         setState(() {

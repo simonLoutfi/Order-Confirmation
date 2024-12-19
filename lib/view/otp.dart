@@ -73,7 +73,7 @@ class OtpState extends State<Otp> {
                           onPressed: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => Phone()),
+                              MaterialPageRoute(builder: (context) => const Phone()),
                             );
                           },
                         ),

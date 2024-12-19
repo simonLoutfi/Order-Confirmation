@@ -1,12 +1,8 @@
-//import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:proto/controller/preferences_controller.dart';
 import 'package:proto/riverpod.dart';
-//import 'package:flutter/services.dart';
-//import 'package:gallery_saver/gallery_saver.dart';
-//import 'package:path_provider/path_provider.dart';
 import 'package:proto/view/add_photo.dart';
 import 'package:proto/view/camera2.dart';
 import 'dart:developer' as developer;
@@ -145,14 +141,6 @@ class _CameraState extends ConsumerState<Camera> {
                             try {
                               await _initializeControllerFuture;
                               final image = await _controller.takePicture();
-                              // final ByteData bytes = await rootBundle.load(image.path);
-                              // final Uint8List imageData = bytes.buffer.asUint8List();
-                              // final tempDir = await getTemporaryDirectory();
-                              // final tempPath = '${tempDir.path}/temp_image.jpg';
-
-                              // final tempFile = File(tempPath);
-                              // await tempFile.writeAsBytes(imageData);
-                              // await GallerySaver.saveImage(tempFile.path);
                               await PreferencesController().saveImage(image.path);
                                 if (context.mounted) {
                                   Navigator.push(

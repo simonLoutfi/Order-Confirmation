@@ -1,7 +1,7 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:proto/controller/preferences_controller.dart';
 import 'package:proto/controller/user_controller.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'camera2.dart';
@@ -9,16 +9,15 @@ import 'camera2.dart';
 class Settings extends StatefulWidget {
   const Settings({super.key});
 
-
   @override
   State<Settings> createState() => _SettingsState();
 }
 
 class _SettingsState extends State<Settings> {
   final InAppReview _inAppReview = InAppReview.instance;
-  String day='',month='',year='',name='';
-  String phone='',feedback='';
-  double rating=0;
+  String day = '', month = '', year = '', name = '';
+  String phone = '', feedback = '';
+  double rating = 0;
 
   final Map<int, String> monthNames = {
     1: 'Jan',
@@ -35,33 +34,31 @@ class _SettingsState extends State<Settings> {
     12: 'Dec',
   };
 
-  Future<void> _requestReview() => _inAppReview.openStoreListing(appStoreId: 'com.example.app');
+  Future<void> _requestReview() =>
+      _inAppReview.openStoreListing(appStoreId: 'com.example.app');
 
   Future<void> _loadSavedValues() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    
+
     setState(() {
-      day = prefs.getString('birthday_day') ?? ''; 
-      year = prefs.getString('birthday_year') ?? ''; 
-      name = prefs.getString('nickname') ?? ''; 
-      phone = prefs.getString('phone') ?? ''; 
+      day = prefs.getString('birthday_day') ?? '';
+      year = prefs.getString('birthday_year') ?? '';
+      name = prefs.getString('nickname') ?? '';
+      phone = prefs.getString('phone') ?? '';
 
       final monthValue = prefs.getString('birthday_month') ?? '';
       if (monthValue.isNotEmpty) {
         int? numericMonth = int.tryParse(monthValue);
         month = numericMonth != null && monthNames.containsKey(numericMonth)
             ? monthNames[numericMonth]!
-            : ''; 
+            : '';
       }
-    }
-    );
+    });
   }
-
 
   Future<void> _saveValues() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setInt('ad', 0);
-
   }
 
   Future<void> _initializeSettings() async {
@@ -73,7 +70,7 @@ class _SettingsState extends State<Settings> {
   void initState() {
     super.initState();
     _loadSavedValues();
-    
+    FirebaseMessaging.instance.subscribeToTopic('daily_notifications');
   }
 
   @override
@@ -84,7 +81,6 @@ class _SettingsState extends State<Settings> {
 
     UserController().addPhoneUser(phone);
     _initializeSettings();
-
 
     return Scaffold(
       body: Center(
@@ -118,11 +114,11 @@ class _SettingsState extends State<Settings> {
                       ),
                       onPressed: () {
                         Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => Camera2(),
-                        ),
-                      );
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => Camera2(),
+                          ),
+                        );
                       },
                     ),
                   ),
@@ -142,7 +138,7 @@ class _SettingsState extends State<Settings> {
                     margin: const EdgeInsets.only(top: 20),
                     width: width * 0.85,
                     decoration: const BoxDecoration(
-                      color:Color.fromARGB(255, 44, 44, 44),
+                      color: Color.fromARGB(255, 44, 44, 44),
                       borderRadius: BorderRadius.all(
                         Radius.circular(20),
                       ),
@@ -151,7 +147,7 @@ class _SettingsState extends State<Settings> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(
-                          width: width*0.85,
+                          width: width * 0.85,
                           padding: const EdgeInsets.all(15),
                           decoration: const BoxDecoration(
                             border: Border(
@@ -161,92 +157,89 @@ class _SettingsState extends State<Settings> {
                               ),
                             ),
                           ),
-                          child:InkWell(
+                          child: InkWell(
                             onTap: () async {
-                                try {
-                                  final isLocked = await UserController().getLock();
+                              try {
+                                final isLocked = await UserController().getLock();
 
-                                  if (!isLocked) {
-                                    if(context.mounted){
-                                      ScaffoldMessenger.of(context).showSnackBar(
-                                        const SnackBar(
-                                          content: Text("App already unlocked"),
-                                        ),
-                                      );
-                                    }
-
-                                  } else {
-                                      if(context.mounted){
-                                        showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return AlertDialog(
-                                            scrollable: true,
-                                            title: const Text('Confirmation'),
-                                            content: const Padding(
-                                              padding: EdgeInsets.all(8.0),
-                                              child: Text(
-                                                "Are you sure you want to unlock the app?",
-                                                style: TextStyle(fontSize: 25),
-                                              ),
-                                            ),
-                                            actions: [
-                                              ElevatedButton(
-                                                onPressed: () => Navigator.pop(context),
-                                                child: const Text("Cancel"),
-                                              ),
-                                              ElevatedButton(
-                                                onPressed: () {
-                                                  UserController().setLock();
-                                                  _saveValues();
-                                                  Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                      builder: (context) => Camera2(),
-                                                    ),
-                                                  );
-                                                },
-                                                child: const Text("Confirm"),
-                                              ),
-                                            ],
-                                          );
-                                        },
-                                      );
-                                    }
-                                    
-                                  }
-                                } catch (e) {
-                                  if(context.mounted){
+                                if (!isLocked) {
+                                  if (context.mounted) {
                                     ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text("App already unlocked"),
+                                      ),
+                                    );
+                                  }
+                                } else {
+                                  if (context.mounted) {
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          scrollable: true,
+                                          title: const Text('Confirmation'),
+                                          content: const Padding(
+                                            padding: EdgeInsets.all(8.0),
+                                            child: Text(
+                                              "Are you sure you want to unlock the app?",
+                                              style: TextStyle(fontSize: 25),
+                                            ),
+                                          ),
+                                          actions: [
+                                            ElevatedButton(
+                                              onPressed: () =>
+                                                  Navigator.pop(context),
+                                              child: const Text("Cancel"),
+                                            ),
+                                            ElevatedButton(
+                                              onPressed: () {
+                                                UserController().setLock();
+                                                _saveValues();
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        Camera2(),
+                                                  ),
+                                                );
+                                              },
+                                              child: const Text("Confirm"),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  }
+                                }
+                              } catch (e) {
+                                if (context.mounted) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
-                                      content: Text("An error occurred: $e"),
+                                      content:
+                                          Text("An error occurred: $e"),
                                     ),
                                   );
-                                  }
-                                  
                                 }
-                              },
-
-                              child:
-                                  
-                                const Text(
-                                "Unlock App",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                ),
-                                
+                              }
+                            },
+                            child: const Text(
+                              "Unlock App",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
                               ),
-                              ) 
-                          ), 
+                            ),
+                          ),
+                        ),
                         InkWell(
                           onTap: () {
                             showDialog(
                               context: context,
                               builder: (BuildContext context) {
-                                double selectedRating =  rating;
-                                final TextEditingController feedbackController = TextEditingController();
-                                feedbackController.text=feedback;
+                                double selectedRating = rating;
+                                final TextEditingController feedbackController =
+                                    TextEditingController();
+                                feedbackController.text = feedback;
                                 return StatefulBuilder(
                                   builder: (context, setState) {
                                     return AlertDialog(
@@ -260,8 +253,11 @@ class _SettingsState extends State<Settings> {
                                             allowHalfRating: true,
                                             direction: Axis.horizontal,
                                             itemCount: 5,
-                                            itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
-                                            itemBuilder: (context, _) => const Icon(
+                                            itemPadding:
+                                                const EdgeInsets.symmetric(
+                                                    horizontal: 4.0),
+                                            itemBuilder: (context, _) =>
+                                                const Icon(
                                               Icons.star,
                                               color: Colors.yellow,
                                             ),
@@ -271,14 +267,18 @@ class _SettingsState extends State<Settings> {
                                               });
                                             },
                                           ),
-                                          if (selectedRating > 0 && selectedRating < 4)
+                                          if (selectedRating > 0 &&
+                                              selectedRating < 4)
                                             Padding(
-                                              padding: const EdgeInsets.only(top: 10),
+                                              padding: const EdgeInsets.only(
+                                                  top: 10),
                                               child: TextField(
                                                 controller: feedbackController,
-                                                decoration: const InputDecoration(
+                                                decoration:
+                                                    const InputDecoration(
                                                   labelText: "Feedback",
-                                                  border: OutlineInputBorder(),
+                                                  border:
+                                                      OutlineInputBorder(),
                                                 ),
                                                 maxLines: 3,
                                               ),
@@ -288,22 +288,43 @@ class _SettingsState extends State<Settings> {
                                       actions: [
                                         TextButton(
                                           child: const Text("Cancel"),
-                                          onPressed: () {
+                                          onPressed: () async{
+                                            
                                             Navigator.pop(context);
                                           },
                                         ),
+                                        TextButton(
+                                          child: const Text(
+                                              "Remind me later"),
+                                          onPressed: () async{
+                                            await UserController().setReminder(true);
+                                            if(context.mounted){
+                                              Navigator.pop(context);
+                                            }
+                                            
+                                          },
+                                        ),
                                         ElevatedButton(
-                                          child: Text(selectedRating >= 4 ? "Review" : "Submit"),
-                                          onPressed: () {
-                                            UserController().setRate(selectedRating, feedbackController.text);
+                                          child: Text(selectedRating >= 4
+                                              ? "Review"
+                                              : "Submit"),
+                                          onPressed: () async{
+                                            await UserController().setReminder(false);
+                                            UserController().setRate(
+                                                selectedRating,
+                                                feedbackController.text);
                                             if (selectedRating >= 4) {
+
                                               _requestReview();
-                                            } else if (feedbackController.text.isNotEmpty) {
+                                            } else if (feedbackController
+                                                .text.isNotEmpty) {
                                               Navigator.pop(context);
                                             } else {
-                                              ScaffoldMessenger.of(context).showSnackBar(
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
                                                 const SnackBar(
-                                                  content: Text("Please provide feedback."),
+                                                  content: Text(
+                                                      "Please provide feedback."),
                                                 ),
                                               );
                                             }
@@ -418,11 +439,8 @@ class _SettingsState extends State<Settings> {
                   ),
                 ),
               ],
-              
             ),
-
           ],
-          
         ),
       ),
     );
