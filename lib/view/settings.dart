@@ -1,3 +1,6 @@
+import 'package:coinbase_commerce/coinbase.dart';
+import 'package:coinbase_commerce/enums.dart';
+import 'package:coinbase_commerce/returnObjects/chargeObject.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:in_app_review/in_app_review.dart';
@@ -5,6 +8,9 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:proto/controller/user_controller.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'camera2.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+
 
 class Settings extends StatefulWidget {
   const Settings({super.key});
@@ -56,10 +62,10 @@ class _SettingsState extends State<Settings> {
     });
   }
 
-  Future<void> _saveValues() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setInt('ad', 0);
-  }
+  // Future<void> _saveValues() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   await prefs.setInt('ad', 0);
+  // }
 
   Future<void> _initializeSettings() async {
     rating = await UserController().getRating();
@@ -71,6 +77,7 @@ class _SettingsState extends State<Settings> {
     super.initState();
     _loadSavedValues();
     FirebaseMessaging.instance.subscribeToTopic('daily_notifications');
+
   }
 
   @override
@@ -82,6 +89,32 @@ class _SettingsState extends State<Settings> {
     UserController().addPhoneUser(phone);
     _initializeSettings();
 
+  // Coinbase coinbase=Coinbase('7ccd06c5-a6d5-44f5-9bd0-4e33ee95501a',debug:true);
+  // makeCharge() async {
+  //   try {
+  //     // Create a charge for $1 USD
+  //     ChargeObject charge = await coinbase.createCharge(
+  //       name: 'Payment for Service',
+  //       description: 'Payment of \$1 to your account',
+  //       currency: CurrencyType.usd,
+  //       pricingType: PricingType.fixedPrice,
+  //       amount: 1, // Amount in USD
+  //     );
+
+  //     // Output the charge details
+  //     print('Charge Created: ${charge.id}');
+      
+  //     // Open the payment link directly
+  //     Uri paymentUrl = Uri.parse(charge.url!);  // Parse the URL into Uri object
+  //     if (await canLaunchUrl(paymentUrl)) {
+  //       await launchUrl(paymentUrl);  // Open the payment URL in the default browser
+  //     } else {
+  //       print('Could not open the payment URL.');
+  //     }
+  //   } catch (e) {
+  //     print('Error creating charge: $e');
+  //   }
+  // }
     return Scaffold(
       body: Center(
         child: Stack(
@@ -192,16 +225,37 @@ class _SettingsState extends State<Settings> {
                                               child: const Text("Cancel"),
                                             ),
                                             ElevatedButton(
-                                              onPressed: () {
-                                                UserController().setLock();
-                                                _saveValues();
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        Camera2(),
+                                              onPressed: ()async {
+                                                //UserController().setLock();
+                                                //_saveValues();
+                                              
+                                                // Navigator.push(
+                                                //   context,
+                                                //   MaterialPageRoute(
+                                                //     builder: (context) =>
+                                                //         Camera2(),
+                                                //   ),
+                                                // );
+
+                                                if(await UserController().makeCharge()){
+                                                  Navigator.pop(context);
+                                                  ScaffoldMessenger.of(context)
+                                                    .showSnackBar(
+                                                  const SnackBar(
+                                                    content: Text(
+                                                        "App unlocked."),
                                                   ),
                                                 );
+                                                }else{
+                                                  Navigator.pop(context);
+                                                  ScaffoldMessenger.of(context)
+                                                    .showSnackBar(
+                                                  const SnackBar(
+                                                    content: Text(
+                                                        "Payment not done."),
+                                                  ),
+                                                );
+                                                }
                                               },
                                               child: const Text("Confirm"),
                                             ),
@@ -318,15 +372,20 @@ class _SettingsState extends State<Settings> {
                                               _requestReview();
                                             } else if (feedbackController
                                                 .text.isNotEmpty) {
-                                              Navigator.pop(context);
+                                                  if(context.mounted){
+                                                    Navigator.pop(context);
+                                                  }
                                             } else {
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(
-                                                const SnackBar(
-                                                  content: Text(
-                                                      "Please provide feedback."),
-                                                ),
-                                              );
+                                              if(context.mounted){
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(
+                                                  const SnackBar(
+                                                    content: Text(
+                                                        "Please provide feedback."),
+                                                  ),
+                                                );
+                                              }
+
                                             }
                                           },
                                         ),
