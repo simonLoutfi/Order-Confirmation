@@ -3,17 +3,17 @@
     "platforms": {
       "android": {
         "default": {
-          "projectId": "flutterproto-40c6e",
-          "appId": "1:802676514185:android:129705f50e6ecb1f595558",
-          "fileOutput": "android/app/google-services.json"
+          "projectId": "",
+          "appId": "",
+          "fileOutput": ""
         }
       },
       "dart": {
         "lib/firebase_options.dart": {
-          "projectId": "flutterproto-40c6e",
+          "projectId": "",
           "configurations": {
-            "android": "1:802676514185:android:129705f50e6ecb1f595558",
-            "ios": "1:802676514185:ios:672eaa4f1183e7dd595558"
+            "android": "",
+            "ios": ""
           }
         }
       }
