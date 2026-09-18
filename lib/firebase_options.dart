@@ -41,49 +41,49 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyCU_hItn29s6X45fGLV-JVCOhhihsQKMGk',
-    appId: '1:802676514185:web:222354e696d17f50595558',
-    messagingSenderId: '802676514185',
-    projectId: 'flutterproto-40c6e',
-    authDomain: 'flutterproto-40c6e.firebaseapp.com',
-    storageBucket: 'flutterproto-40c6e.firebasestorage.app',
-    measurementId: 'G-5EJVZLB1N9',
+    apiKey: '',
+    appId: '',
+    messagingSenderId: '',
+    projectId: '',
+    authDomain: '',
+    storageBucket: '',
+    measurementId: '',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyDyjnSZ1o4ltzbxrrO1_OQmYwR0Fkaecys',
-    appId: '1:802676514185:ios:672eaa4f1183e7dd595558',
-    messagingSenderId: '802676514185',
-    projectId: 'flutterproto-40c6e',
-    storageBucket: 'flutterproto-40c6e.firebasestorage.app',
-    iosBundleId: 'com.example.proto',
+    apiKey: '',
+    appId: '',
+    messagingSenderId: '',
+    projectId: '',
+    storageBucket: '',
+    iosBundleId: '',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyCU_hItn29s6X45fGLV-JVCOhhihsQKMGk',
-    appId: '1:802676514185:web:7ac91ed8f415b70a595558',
-    messagingSenderId: '802676514185',
-    projectId: 'flutterproto-40c6e',
-    authDomain: 'flutterproto-40c6e.firebaseapp.com',
-    storageBucket: 'flutterproto-40c6e.firebasestorage.app',
-    measurementId: 'G-VVBQFJR7E8',
+    apiKey: '',
+    appId: '',
+    messagingSenderId: '',
+    projectId: '',
+    authDomain: '',
+    storageBucket: '',
+    measurementId: '',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyDyjnSZ1o4ltzbxrrO1_OQmYwR0Fkaecys',
-    appId: '1:802676514185:ios:672eaa4f1183e7dd595558',
-    messagingSenderId: '802676514185',
-    projectId: 'flutterproto-40c6e',
-    storageBucket: 'flutterproto-40c6e.firebasestorage.app',
-    iosBundleId: 'com.example.proto',
+    apiKey: '',
+    appId: '',
+    messagingSenderId: '',
+    projectId: '',
+    storageBucket: '',
+    iosBundleId: '',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyCFhpoRN3RnxObcR3j5xFil9T1FEfUSqB8',
-    appId: '1:802676514185:android:129705f50e6ecb1f595558',
-    messagingSenderId: '802676514185',
-    projectId: 'flutterproto-40c6e',
-    storageBucket: 'flutterproto-40c6e.firebasestorage.app',
+    apiKey: '',
+    appId: '',
+    messagingSenderId: '',
+    projectId: '',
+    storageBucket: '',
   );
 
 }
