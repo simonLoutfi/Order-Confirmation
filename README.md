@@ -1,6 +1,6 @@
-# proto
+# Order Management
 
-A new Flutter project.
+A Flutter project to practice Flutter. This project takes camera photos, use AI to enhance images, state management, input validation, online payment, and much more.
 
 ## Getting Started
 
